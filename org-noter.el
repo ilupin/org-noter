@@ -437,8 +437,7 @@ The title used will be the default one."
       ;; the base buffer (as this buffer is indirect to the base!)
       (goto-char starting-point)
       (setq buffer-file-name notes-file-path
-            org-noter--session session
-            fringe-indicator-alist '((truncation . nil)))
+            org-noter--session session)
       (add-hook 'kill-buffer-hook 'org-noter--handle-kill-buffer nil t)
       (add-hook 'window-scroll-functions 'org-noter--set-notes-scroll nil t)
       (org-noter--set-text-properties (org-noter--parse-root (vector notes-buffer document-property-value))
