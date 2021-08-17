@@ -343,9 +343,12 @@ The title used will be the default one."
              (prop-value)
              (t ,variable)))))
 
+(defvar org-noter-display-document-filename t)
+
 (defun org-noter--create-session (ast document-property-value notes-file-path)
   (let* ((raw-value-not-empty (> (length (org-element-property :raw-value ast)) 0))
-         (display-name (if raw-value-not-empty
+         (display-name (if (and raw-value-not-empty
+                                (not org-noter-display-document-filename))
                            (org-element-property :raw-value ast)
                          (file-name-nondirectory document-property-value)))
          (frame-name (format "Emacs Org-noter - %s" display-name))
@@ -354,7 +357,11 @@ The title used will be the default one."
          (document-path (expand-file-name document-property-value))
          (document-major-mode (buffer-local-value 'major-mode document))
          (document-buffer-name
-          (generate-new-buffer-name (concat (unless raw-value-not-empty "Org-noter: ") display-name)))
+          (generate-new-buffer-name
+           (concat (unless (and raw-value-not-empty
+                                (not org-noter-display-document-filename))
+                     "Org-noter: ")
+                   display-name)))
          (document-buffer
           (if (eq document-major-mode 'nov-mode)
               document
